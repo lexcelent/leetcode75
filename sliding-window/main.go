@@ -148,6 +148,6 @@ func longestSubarray(nums []int) int {
 }
 
 func main() {
-	vars := []int{1, 0, 1, 1, 1, 0, 1, 1}
+	vars := []int{1, 3, -1, -3, 5, 3, 6, 7}
 	fmt.Println(findMaxConsecutiveOnes(vars))
 }

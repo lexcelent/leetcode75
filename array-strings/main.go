@@ -2,10 +2,31 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"slices"
 	"strings"
 	"unicode"
 )
+
+func mergeAlternately(word1 string, word2 string) string {
+	// 1768. Merge Strings Alternately
+	// Мой второй вариант
+	var sb strings.Builder
+
+	for i, j := 0, 0; i+j < len(word1)+len(word2); {
+		if i < len(word1) {
+			sb.WriteByte(word1[i])
+			i++
+		}
+
+		if j < len(word2) {
+			sb.WriteByte(word2[j])
+			j++
+		}
+	}
+
+	return sb.String()
+}
 
 func kidsWithCandies(candies []int, extraCandies int) []bool {
 	// 1431. Kids With the Greatest Number of Candies
@@ -125,7 +146,92 @@ func productExceptSelf(nums []int) []int {
 	return res
 }
 
+func gcd(a, b int) int {
+	// Наибольший общий делитель. Алгоритм Евклида
+	for b != 0 {
+		a, b = b, a%b
+	}
+	return a
+}
+
+func gcdOfStrings(str1 string, str2 string) string {
+	// 1071. Greatest Common Divisor of Strings
+	// Повторить бы. Или запомнить
+	if str1+str2 != str2+str1 {
+		return ""
+	}
+
+	g := gcd(len(str1), len(str2))
+
+	return str1[:g]
+}
+
+func findGCD(nums []int) int {
+	// 1979. Find Greatest Common Divisor of Array
+	var smallest, biggest = math.MaxInt, math.MinInt
+
+	for _, v := range nums {
+		smallest = min(smallest, v)
+		biggest = max(biggest, v)
+	}
+
+	return gcd(smallest, biggest)
+}
+
+func increasingTriplet(nums []int) bool {
+	// 334. Increasing Triplet Subsequence
+	lst := []int{nums[0]}
+	currentLen := len(lst)
+
+	conditionLength := 3
+
+	for _, num := range nums[1:] {
+		if num > lst[len(lst)-1] {
+			lst = append(lst, num)
+			currentLen++
+		} else {
+			// Меняем последовательность
+			indx := 0
+			for indx < len(lst) && lst[indx] < num {
+				indx++
+			}
+			lst[indx] = num
+		}
+
+		if currentLen >= conditionLength {
+			return true
+		}
+	}
+
+	return false
+}
+
+func lengthOfLIS(nums []int) int {
+	// 300. Longest Increasing Subsequence
+	// Вроде алгоритм запомнил. Нужно будет попробовать еще
+	lst := []int{nums[0]}
+	maxLen := len(lst)
+
+	for _, num := range nums[1:] {
+		if num > lst[len(lst)-1] {
+			lst = append(lst, num)
+			maxLen++
+		} else {
+			// Меняем последовательность
+			indx := 0
+			for indx < len(lst) && lst[indx] < num {
+				indx++
+			}
+			lst[indx] = num
+		}
+	}
+
+	return maxLen
+}
+
 func main() {
 	fmt.Println(isPalindrome(" "))
-	fmt.Println(productExceptSelf([]int{1, 2, 3, 4, 5}))
+	// fmt.Println(productExceptSelf([]int{1, 2, 3, 4, 5}))
+	// fmt.Println(gcdOfStrings("ABAB", "ABABAB"))
+	fmt.Println(lengthOfLIS([]int{1, 0, 1, 2, 3, 0, 4, 1, 5}))
 }

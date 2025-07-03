@@ -35,7 +35,7 @@ func heapify(nums []int, indx int) {
 }
 
 // actually delete root
-func delete(nums []int) []int {
+func deleteRoot(nums []int) []int {
 	nums[0] = nums[len(nums)-1]
 	nums = nums[:len(nums)-1]
 
@@ -50,7 +50,7 @@ func findKthLargest(nums []int, k int) int {
 	}
 
 	for i := 0; i < k-1; i++ {
-		nums = delete(nums)
+		nums = deleteRoot(nums)
 	}
 
 	return nums[0]
