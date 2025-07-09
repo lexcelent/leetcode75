@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"math"
 	"slices"
+	"strconv"
 	"strings"
 	"unicode"
 )
 
+// 1768. Merge Strings Alternately
+// Мой второй вариант
 func mergeAlternately(word1 string, word2 string) string {
-	// 1768. Merge Strings Alternately
-	// Мой второй вариант
 	var sb strings.Builder
 
 	for i, j := 0, 0; i+j < len(word1)+len(word2); {
@@ -28,8 +29,8 @@ func mergeAlternately(word1 string, word2 string) string {
 	return sb.String()
 }
 
+// 1431. Kids With the Greatest Number of Candies
 func kidsWithCandies(candies []int, extraCandies int) []bool {
-	// 1431. Kids With the Greatest Number of Candies
 	result := make([]bool, len(candies))
 	greatest := slices.Max(candies)
 
@@ -44,8 +45,8 @@ func kidsWithCandies(candies []int, extraCandies int) []bool {
 	return result
 }
 
+// 125. Valid Palindrome
 func isPalindrome(s string) bool {
-	// 125. Valid Palindrome
 
 	// 1. Избавляемся от лишних символов
 	var sb strings.Builder
@@ -66,10 +67,9 @@ func isPalindrome(s string) bool {
 	return true
 }
 
+// 605. Can Place Flowers
+// На будущее: переписать код под switch-case
 func canPlaceFlowers(flowerbed []int, n int) bool {
-	// 605. Can Place Flowers
-	// На будущее: переписать код под switch-case
-
 	if n == 0 {
 		// We can place zero flowers
 		return true
@@ -121,10 +121,9 @@ func canPlaceFlowers(flowerbed []int, n int) bool {
 	return n == 0
 }
 
+// 238. Product of Array Except Self
+// Нужно будет повторить
 func productExceptSelf(nums []int) []int {
-	// 238. Product of Array Except Self
-	// Нужно будет повторить
-
 	res := make([]int, len(nums))
 
 	for i := range res {
@@ -146,17 +145,17 @@ func productExceptSelf(nums []int) []int {
 	return res
 }
 
+// Наибольший общий делитель. Алгоритм Евклида
 func gcd(a, b int) int {
-	// Наибольший общий делитель. Алгоритм Евклида
 	for b != 0 {
 		a, b = b, a%b
 	}
 	return a
 }
 
+// 1071. Greatest Common Divisor of Strings
+// Повторить бы. Или запомнить
 func gcdOfStrings(str1 string, str2 string) string {
-	// 1071. Greatest Common Divisor of Strings
-	// Повторить бы. Или запомнить
 	if str1+str2 != str2+str1 {
 		return ""
 	}
@@ -166,8 +165,8 @@ func gcdOfStrings(str1 string, str2 string) string {
 	return str1[:g]
 }
 
+// 1979. Find Greatest Common Divisor of Array
 func findGCD(nums []int) int {
-	// 1979. Find Greatest Common Divisor of Array
 	var smallest, biggest = math.MaxInt, math.MinInt
 
 	for _, v := range nums {
@@ -178,8 +177,8 @@ func findGCD(nums []int) int {
 	return gcd(smallest, biggest)
 }
 
+// 334. Increasing Triplet Subsequence
 func increasingTriplet(nums []int) bool {
-	// 334. Increasing Triplet Subsequence
 	lst := []int{nums[0]}
 	currentLen := len(lst)
 
@@ -206,9 +205,9 @@ func increasingTriplet(nums []int) bool {
 	return false
 }
 
+// 300. Longest Increasing Subsequence
+// Вроде алгоритм запомнил. Нужно будет попробовать еще
 func lengthOfLIS(nums []int) int {
-	// 300. Longest Increasing Subsequence
-	// Вроде алгоритм запомнил. Нужно будет попробовать еще
 	lst := []int{nums[0]}
 	maxLen := len(lst)
 
@@ -229,9 +228,52 @@ func lengthOfLIS(nums []int) int {
 	return maxLen
 }
 
+// 443. String Compression
+func compress(chars []byte) int {
+	var count = 1
+	var leftPtr = 1
+
+	// Перевод числа в строку и запись в strings.Builder
+	writeNumber := func(i int) {
+		number := strconv.Itoa(i)
+		for i := 0; i < len(number); i++ {
+			chars[leftPtr] = number[i]
+			leftPtr++
+		}
+	}
+
+	// Найти группу
+	for i := 1; i < len(chars); i++ {
+
+		// Проверяем в какой мы группе
+		if chars[i] == chars[i-1] {
+			count++
+		} else {
+			// Если группа изменилась, то
+			// 1. Записываем количество в прошлой группе и обнуляем
+			if count != 1 {
+				writeNumber(count)
+			}
+			count = 1
+
+			// 2. Записываем букву новой группы
+			chars[leftPtr] = chars[i]
+			leftPtr++
+		}
+	}
+
+	if count > 1 {
+		writeNumber(count)
+	}
+
+	return len(chars[:leftPtr])
+}
+
 func main() {
-	fmt.Println(isPalindrome(" "))
+	// fmt.Println(isPalindrome(" "))
 	// fmt.Println(productExceptSelf([]int{1, 2, 3, 4, 5}))
 	// fmt.Println(gcdOfStrings("ABAB", "ABABAB"))
-	fmt.Println(lengthOfLIS([]int{1, 0, 1, 2, 3, 0, 4, 1, 5}))
+	// fmt.Println(lengthOfLIS([]int{1, 0, 1, 2, 3, 0, 4, 1, 5}))
+	// compress([]byte{'a', 'a', 'a', 'a', 'a'})
+	fmt.Println(compress([]byte{'a'}))
 }
