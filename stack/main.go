@@ -1,6 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+	"strings"
+	"unicode"
+)
 
 // 2390. Removing Stars From a String
 func removeStars(s string) string {
@@ -62,6 +67,56 @@ func asteroidCollision(asteroids []int) []int {
 	}
 
 	return stack.ar
+}
+
+// Перевернуть строку
+func reverseString(s string) string {
+	bytes := []byte(s)
+	for i, j := 0, len(bytes)-1; i < j; i, j = i+1, j-1 {
+		bytes[i], bytes[j] = bytes[j], bytes[i]
+	}
+	return string(bytes)
+}
+
+// 394. Decode String
+// Задание довольно тяжелое. Подсмотрел решение
+func decodeString(s string) string {
+	stack := []byte{}
+
+	for i := 0; i < len(s); i++ {
+		if s[i] != ']' {
+			stack = append(stack, s[i])
+		} else {
+			// decoding logic
+
+			// Получаем содержимое скобок
+			var sb strings.Builder
+			for stack[len(stack)-1] != '[' {
+				sb.WriteByte(stack[len(stack)-1])
+				stack = stack[:len(stack)-1]
+			}
+			substring := reverseString(sb.String())
+			substringByte := []byte(substring)
+
+			// Удаляем открывающую скобку
+			stack = stack[:len(stack)-1]
+
+			// Множитель строки
+			sb.Reset()
+			for len(stack) != 0 && unicode.IsDigit(rune(stack[len(stack)-1])) {
+				sb.WriteByte(stack[len(stack)-1])
+				stack = stack[:len(stack)-1]
+			}
+			k, _ := strconv.Atoi(reverseString(sb.String()))
+
+			// Добавляем в стек результат
+			for i := 0; i < k; i++ {
+				stack = append(stack, substringByte...)
+			}
+		}
+	}
+
+	return string(stack)
 }
 
 func main() {
